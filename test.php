@@ -291,9 +291,9 @@ if( isset( $_GET['category'] ) ){
             $videodataload=1;
             $category=7;
             $selecttab=7;
-            $page_title =  'Video';
-            $topic_title =  'Video';
-            $title_description = 'Video';
+            $page_title =  'Video Classes';
+            $topic_title =  'Video Classes';
+            $title_description = "Master job preparation with Prostuti's video classes. Access subject-wise questions, exam guides, and resources for public job readiness.";
             $display_limit=20;
             $table_name='current_affairs_title';
             $subjecttype=1;
@@ -402,5 +402,38 @@ $jsonSchema = json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNIC
 <head>
     <?php echo '<script type="application/ld+json">' . $jsonSchema . '</script>';?>
 </head>
-Here
 </body>
+
+<?php
+function my_enqueue_media_uploader() {
+    wp_enqueue_media();
+}
+add_action('admin_enqueue_scripts', 'my_enqueue_media_uploader');
+?>
+<!--    For Image Change-->
+<button id="upload_image_button" class="button">Upload Image</button>
+<input type="hidden" id="image_url" name="image_url" value="">
+<img id="image_preview" src="" style="max-width: 300px; display: none;">
+<script>
+    var mediaUploader;
+    jQuery('#upload_image_button').click(function(e) {
+        e.preventDefault();
+        if (mediaUploader) {
+            mediaUploader.open();
+            return;
+        }
+        mediaUploader = wp.media.frames.file_frame = wp.media({
+            title: 'Choose Image',
+            button: {
+            text: 'Choose Image'
+            },
+            multiple: false
+        });
+        mediaUploader.on('select', function() {
+            var attachment = mediaUploader.state().get('selection').first().toJSON();
+            $('#image_url').val(attachment.url);
+            $('#image_preview').attr('src', attachment.url).show();
+        });
+        mediaUploader.open();
+    });
+</script>
